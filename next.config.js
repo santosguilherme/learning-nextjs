@@ -1,3 +1,6 @@
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const {ANALYZE} = process.env;
+
 module.exports = {
     exportPathMap: function () {
         return {
@@ -8,5 +11,16 @@ module.exports = {
             '/p/deploy-nextjs': {page: '/post', query: {title: 'Deploy apps with Zeit'}},
             '/p/exporting-pages': {page: '/post', query: {title: 'Learn to Export HTML Pages'}}
         }
+    },
+    webpack: function (config) {
+        if (ANALYZE) {
+            config.plugins.push(new BundleAnalyzerPlugin({
+                analyzerMode: 'server',
+                analyzerPort: 8888,
+                openAnalyzer: true
+            }))
+        }
+
+        return config
     }
 };

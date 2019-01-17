@@ -2,69 +2,46 @@ import React from 'react';
 
 import Layout from '../components/MyLayout.js'
 import Link from 'next/link'
+import loadDB from '../lib/load-db'
 
-function getPosts() {
-    return [
-        {id: 'hello-nextjs', title: 'Hello Next.js'},
-        {id: 'learn-nextjs', title: 'Learn Next.js is awesome'},
-        {id: 'deploy-nextjs', title: 'Deploy apps with ZEIT'},
-    ]
-}
-
-const PostLink = ({post}) => (
+const PostLink = (props) => (
     <li>
-        <Link as={`/p/${post.id}`} href={`/post?title=${post.title}`}>
-            <a>{post.title}</a>
+        <Link as={`/p/${props.id}`} href={`/post?id=${props.id}`}>
+            <a>{props.title}</a>
         </Link>
-        <style jsx>{`
-      li {
-        list-style: none;
-        margin: 5px 0;
-      }
-
-      a {
-        text-decoration: none;
-        color: blue;
-        font-family: "Arial";
-      }
-
-      a:hover {
-        opacity: 0.6;
-      }
-    `}</style>
     </li>
 )
 
-export default () => (
+const Index = ({ stories }) => (
     <Layout>
-        <h1>My Blog</h1>
+        <h1>Hacker News - Latest</h1>
         <ul>
-            {getPosts().map((post) => (
-                <PostLink key={post.id} post={post}/>
+            {stories.map(story => (
+                <PostLink
+                    key={story.id}
+                    id={story.id}
+                    title={story.title}
+                />
             ))}
         </ul>
-        <style jsx>{`
-      h1, a {
-        font-family: "Arial";
-      }
-
-      ul {
-        padding: 0;
-      }
-
-      li {
-        list-style: none;
-        margin: 5px 0;
-      }
-
-      a {
-        text-decoration: none;
-        color: blue;
-      }
-
-      a:hover {
-        opacity: 0.6;
-      }
-    `}</style>
     </Layout>
 )
+
+Index.getInitialProps = async () => {
+    const db = await loadDB()
+
+    const ids = await db.child('topstories').once('value')
+    let stories = await Promise.all(
+        ids.val().slice(0, 10).map(id => db
+            .child('item')
+            .child(id)
+            .once('value')
+        )
+    )
+
+    stories = stories.map(s => s.val())
+
+    return { stories }
+}
+
+export default Index
