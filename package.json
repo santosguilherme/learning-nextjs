@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next",
     "build": "next build",
-    "start": "next start -p 8000",
+    "start": "next start",
     "export": "next export",
     "analyze": "cross-env ANALYZE=1 next build"
   },
@@ -15,13 +15,11 @@
   "license": "ISC",
   "dependencies": {
     "cross-env": "^5.2.0",
-    "express": "^4.16.4",
-    "firebase": "^5.7.3",
-    "isomorphic-unfetch": "^3.0.0",
+    "marked": "^0.6.0",
     "next": "^7.0.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "react-markdown": "^4.0.6",
+    "react-highlight": "^0.12.0",
     "webpack-bundle-analyzer": "^3.0.3"
   }
 }
