@@ -1,8 +1,0 @@
-node_modules
-.idea
-package-lock.json
-yarn.lock
-yarn-error.log
-.next
-out/
-*.log
